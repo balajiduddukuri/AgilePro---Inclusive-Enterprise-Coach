@@ -77,19 +77,22 @@ export const analyzeRFP = async (rfpText: string) => {
 export const generateBAWBS = async (rfpText: string) => {
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const prompt = `
-    You are a Master Product Architect. Transform the provided scope/RFP into a full Agile Work Breakdown.
-    
-    REQUIREMENTS:
-    1. HIERARCHY: Break it down as EPIC -> FEATURE -> USER STORY.
-    2. USER STORIES: 
-       - Must include a clear "As a... I want... So that..." statement.
-       - MUST include 3-5 BDD Acceptance Criteria (Given/When/Then).
-    3. PERT ESTIMATIONS: For every User Story, provide a table with:
-       - Optimistic (O): Best case.
-       - Most Likely (M): Realistic.
-       - Pessimistic (P): Worst case.
-       - Expected Value (E): Calculated as (O + 4M + P) / 6.
-    4. PRIORITY: Assign a MoSCoW priority (Must, Should, Could, Won't).
+    Act as a Senior Product Manager + Agile Coach + Delivery Estimation Expert.
+    Transform the provided scope into a structured Delivery Backlog with PERT Estimations.
+
+    REQUIREMENTS & DECOMPOSITION RULES:
+    1. HIERARCHY: EPICS (Business Outcomes) -> FEATURES (PI/Release Capabilities) -> USER STORIES (Sprint-sized).
+    2. USER STORIES: Use "As a... I want... So that..." format. Include 3-5 BDD Acceptance Criteria (Given/When/Then).
+    3. PERT ESTIMATION TABLE: For EVERY story, provide:
+       - Optimistic (O), Most Likely (M), Pessimistic (P).
+       - Expected Value (E) = (O + 4M + P) / 6.
+    4. AGGREGATION & FORECAST:
+       - Aggregate story PERT values to Feature and Epic levels.
+       - Provide a Delivery Forecast (estimated number of Sprints).
+    5. RISK & VARIANCE ANALYSIS:
+       - Highlight "High Variance" items (where P - O is large).
+       - Suggest mitigation actions for these risks.
+    6. PRIORITY: Assign MoSCoW (Must, Should, Could, Won't).
 
     SCOPE TEXT:
     ${rfpText}

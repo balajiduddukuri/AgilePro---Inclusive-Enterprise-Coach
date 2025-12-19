@@ -75,7 +75,7 @@ const FULL_OPERATING_CHECKLIST = [
 ];
 
 const glossaryItems = [
-  { term: 'PERT', icon: '⏱️', cat: 'Estimation', desc: 'Program Evaluation Review Technique. Calculates expected duration based on O, M, and P values.', tip: 'E = (O + 4M + P) / 6' },
+  { term: 'PERT', icon: '⏱️', cat: 'Estimation', desc: 'Program Evaluation Review Technique. Calculates expected duration based on O, M, and P values.', tip: 'High variance (P-O) indicates risk.' },
   { term: 'NFR', icon: '🛡️', cat: 'Quality', desc: 'Non-Functional Requirements. Benchmarks for security, speed, and scale.', tip: 'Must be testable and measurable.' },
   { term: 'BDD', icon: '🥒', cat: 'Execution', desc: 'Behavior Driven Development. Uses Given/When/Then to bridge gaps between business and tech.', tip: 'Prevents requirement ambiguity.' },
   { term: 'INVEST', icon: '💎', cat: 'Execution', desc: 'Criteria for good User Stories: Independent, Negotiable, Valuable, Estimable, Small, Testable.', tip: 'Small stories flow faster.' },
@@ -92,6 +92,7 @@ const COMPREHENSIVE_GLOSSARY_MD = `
 | **PERT Table** | A table used to estimate work units with mathematical certainty using three-point estimates. | Estimation |
 | **BDD (Behavior Driven Development)** | A software development process that encourages collaboration through Given/When/Then examples. | Quality |
 | **NFR (Non-Functional Requirement)** | Systems attributes such as security, reliability, or performance. | Architecture |
+| **Story Slicing** | Breaking large user behaviors into sprint-sized independent pieces. | Delivery |
 `;
 
 // --- Components ---
@@ -281,7 +282,7 @@ const App: React.FC = () => {
       aria-label="Copy to clipboard"
     >
       {copyingId === id ? <Check size={14} className="text-emerald-500" /> : <Clipboard size={14} />}
-      <span>{copyingId === id ? 'Copied!' : 'Copy Output'}</span>
+      <span>{copyingId === id ? 'Copied!' : 'Copy for Jira/Confluence'}</span>
     </button>
   );
 
@@ -540,7 +541,8 @@ const App: React.FC = () => {
                 {isChatting && <div className="flex gap-2 p-4 theme-text-muted italic text-xs animate-pulse"><Loader2 size={14} className="animate-spin" /> Analyzing strategy...</div>}
               </div>
               <form onSubmit={handleSendMessage} className="relative">
-                <input value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Ask your coach anything..." className="w-full p-6 pr-20 rounded-3xl theme-bg-input border border-[var(--card-border)] theme-text-main text-sm focus:ring-4 ring-[var(--brand-primary)]/20 shadow-2xl outline-none" />
+                {/* Fix: Wrap state update in an arrow function to correctly extract value from ChangeEvent */}
+                <input value={chatInput} onChange={(e) => setChatInput(e.target.value)} placeholder="Ask your coach anything..." className="w-full p-6 pr-20 rounded-3xl theme-bg-input border border-[var(--card-border)] theme-text-main text-sm focus:ring-4 ring-[var(--brand-primary)]/20 shadow-2xl outline-none" />
                 <button type="submit" disabled={!chatInput.trim() || isChatting} className="absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-[var(--brand-primary)] text-white rounded-2xl shadow-lg hover:opacity-90 active:scale-95 transition-all"><ChevronRight size={20} /></button>
               </form>
             </div>
